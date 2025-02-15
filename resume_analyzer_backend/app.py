@@ -7,6 +7,8 @@ from pdfminer.high_level import extract_text
 from docx import Document
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from utils.ai_analysis import analyze_resume_with_ai
+
 
 # ✅ Initialize Flask app
 app = Flask(__name__)
@@ -115,7 +117,10 @@ def upload_file():
             "skills": extract_skills(text),
         }
 
-        return jsonify({"filename": file.filename, "analysis": parsed_data})
+        # ✅ AI-based Resume Analysis
+        ai_feedback = analyze_resume_with_ai(parsed_data["skills"])
+
+        return jsonify({"filename": file.filename, "analysis": parsed_data, "ai_feedback": ai_feedback})
 
     except Exception as e:
         logging.error(f"Error processing resume: {str(e)}", exc_info=True)
