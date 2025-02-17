@@ -15,19 +15,35 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 
 def analyze_resume_with_ai(skills):
-    """Analyze resume skills using Google Gemini and provide job-fit score & improvement suggestions."""
+    """Analyze resume skills using Google Gemini and provide structured feedback."""
     if not skills or skills == ["None Detected"]:
-        return "No relevant skills found in the resume."
+        return {"strengths": "No relevant skills found.", "weaknesses": "Consider adding more relevant skills."}
 
     skills_text = ", ".join(skills)
-    prompt = f"Analyze this resume based on the following skills: {skills_text}. Provide job-fit score and improvement suggestions."
+    prompt = f"""
+    Analyze this resume based on the following skills: {skills_text}. 
+    - Provide a brief summary of strengths.
+    - List any weaknesses or areas of improvement.
+    - Output should be in JSON format as: {{"strengths": "...", "weaknesses": "..."}}.
+    """
 
     try:
         # ✅ Use Gemini Pro model
         model = genai.GenerativeModel("gemini-pro")
         response = model.generate_content(prompt)
 
-        return response.text  # ✅ Gemini response format
+        # ✅ Extract structured response
+        import json
+        ai_response = json.loads(response.text)  # Convert response to JSON
+
+        # ✅ Validate AI response structure
+        if isinstance(ai_response, dict) and "strengths" in ai_response and "weaknesses" in ai_response:
+            return ai_response
+        else:
+            raise ValueError("Invalid response format from Gemini.")
 
     except Exception as e:
-        return f"❌ Gemini API error: {str(e)}"
+        return {
+            "strengths": "AI analysis failed.",
+            "weaknesses": f"Error: {str(e)}"
+        }

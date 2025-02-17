@@ -18,17 +18,20 @@ const AnalysisResult = () => {
   useEffect(() => {
     const fetchAnalysis = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/analysis");
+        // Sending the fileName in the body for POST request
+        const response = await axios.post("http://127.0.0.1:5000/analysis", { fileName });
+        console.log("Response from API:", response.data);  // Log the response
         setAnalysisData(response.data);
       } catch (err) {
         setError("Failed to fetch analysis results.");
+        console.error("Error fetching analysis:", err);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchAnalysis();
-  }, []);
+  }, [fileName]); // Dependency on fileName
 
   return (
     <>
@@ -93,6 +96,29 @@ const AnalysisResult = () => {
                     📝 Resume: {fileName}
                   </Typography>
 
+                  {/* Displaying user details */}
+                  <Typography 
+                    variant="h6" 
+                    color="primary" 
+                    fontWeight="bold" 
+                    sx={{ mt: 2 }}
+                  >
+                    👤 User Details:
+                  </Typography>
+                  <Typography sx={{ fontSize: "1rem", mt: 1 }}>
+                    <strong>Name:</strong> {analysisData?.analysis?.name || "Not available"}
+                  </Typography>
+                  <Typography sx={{ fontSize: "1rem", mt: 1 }}>
+                    <strong>Email:</strong> {analysisData?.analysis?.email || "Not available"}
+                  </Typography>
+                  <Typography sx={{ fontSize: "1rem", mt: 1 }}>
+                    <strong>Phone:</strong> {analysisData?.analysis?.phone || "Not available"}
+                  </Typography>
+                  <Typography sx={{ fontSize: "1rem", mt: 1 }}>
+                    <strong>Skills:</strong> {analysisData?.analysis?.skills.join(', ') || "No skills detected"}
+                  </Typography>
+
+                  {/* Displaying key strengths */}
                   <Typography 
                     variant="h6" 
                     color="primary" 
@@ -102,9 +128,10 @@ const AnalysisResult = () => {
                     ✅ Key Strengths:
                   </Typography>
                   <Typography sx={{ color: "green", fontSize: "1rem", mt: 1 }}>
-                    {analysisData.strengths || "No strengths detected"}
+                    {analysisData?.ai_analysis?.strengths || "AI analysis failed."}
                   </Typography>
 
+                  {/* Displaying areas of improvement */}
                   <Typography 
                     variant="h6" 
                     color="error" 
@@ -114,7 +141,7 @@ const AnalysisResult = () => {
                     ⚠️ Areas of Improvement:
                   </Typography>
                   <Typography sx={{ color: "red", fontSize: "1rem", mt: 1 }}>
-                    {analysisData.weaknesses || "No weaknesses detected"}
+                    {analysisData?.ai_analysis?.weaknesses || "Error: No weaknesses detected."}
                   </Typography>
                 </CardContent>
               </Card>
