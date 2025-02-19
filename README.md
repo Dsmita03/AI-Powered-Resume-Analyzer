@@ -12,20 +12,21 @@ The **AI-Powered Resume Analyzer** is a web application that allows users to upl
 - **User Authentication**: Sign-up/login to save resume analysis history.
 
 ## 🛠️ Tech Stack
-### **Frontend** (React + Vite)
-- React.js (Vite for Fast Development)
-- React Router
-- Redux Toolkit (State Management)
-- Axios (API Requests)
-- Material UI (Styling)
+### **Frontend** *(React + Vite)*  
+- **React.js** (Fast development with Vite)  
+- **React Router** (Seamless navigation)  
+- **Redux Toolkit** (State management)  
+- **Axios** (API integration)  
+- **Material UI** (Modern UI components) 
 
-### **Backend** (Flask + Python)
-- Flask (REST API)
-- Flask-CORS (Cross-Origin Resource Sharing)
-- Gemini API (For Resume Analysis)
-- PDFMiner & python-docx (For Resume Parsing)
-- TensorFlow/NLP Libraries (Text Processing)
-- Firebase (Storage for User & Resume Data)
+
+### **Backend** *(Flask + Python)*  
+- **Flask** (Lightweight REST API framework)  
+- **Flask-CORS** (Cross-Origin Resource Sharing)  
+- **Gemini API** (AI-powered resume analysis)  
+- **PDFMiner & python-docx** (Resume parsing tools)  
+- **TensorFlow / NLP Libraries** (Advanced text processing)  
+
 
 ## 📂 Project Structure
 ```
@@ -72,14 +73,18 @@ npm run dev  # Runs on http://localhost:5173
 - **Analysis Page**: Displays extracted details, job-fit score, and suggestions.
 - **Login/Register**: User authentication.
 - **Dashboard**: Manage saved resumes and job matches.
+- **Job Matching Page**: View job recommendations based on AI-powered analysis.
+- **Saved Resumes Page**: Access previously analyzed resumes and insights.
+- **Admin Panel**: Manage users, system settings, and analysis data.
 
-## 🌟 Future Enhancements
-- Resume formatting suggestions.
-- Support for LinkedIn profile analysis.
-- Job recommendation system based on AI insights.
-
+ 
 ## 🤝 Contributing
-Contributions are welcome! Feel free to submit issues and pull requests.
+We welcome contributions from the community! If you’d like to enhance the features or fix any issues, feel free to:
 
+- Fork the repository
+- Create a new branch for your updates
+- Submit a pull request
+
+### 💡 Have feedback or suggestions? Reach out via GitHub Issues!
 ---
 Happy Coding! 🚀
