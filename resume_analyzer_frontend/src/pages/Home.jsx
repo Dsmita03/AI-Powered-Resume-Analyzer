@@ -54,9 +54,9 @@ const Home = () => {
             <Button variant="contained" color="primary" size="large" onClick={() => navigate("/upload")}>
               Upload Resume
             </Button>
-            <Button variant="contained" color="primary" size="large" onClick={() => navigate("/about")}>
+            {/* <Button variant="contained" color="primary" size="large" onClick={() => navigate("/about")}>
               Learn More
-            </Button>
+            </Button> */}
           </Box>
         </Container>
       </Box>

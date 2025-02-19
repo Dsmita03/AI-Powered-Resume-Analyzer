@@ -30,7 +30,7 @@ const Footer = () => {
 
         {/* Footer Text */}
         <Typography variant="h6" fontWeight="bold">
-          AI Resume Analyzer
+        ResuMate.ai
         </Typography>
         <Typography variant="body2" sx={{ mt: 1, maxWidth: 600, mx: "auto" }}>
           Helping job seekers craft the perfect resume with AI-driven insights, personalized feedback, and job match analysis.
@@ -38,7 +38,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <Typography variant="body2" sx={{ mt: 2, fontSize: "14px", opacity: 0.8 }}>
-          © {new Date().getFullYear()} AI Resume Analyzer. All Rights Reserved.
+          © {new Date().getFullYear()} ResuMate.ai. All Rights Reserved.
         </Typography>
       </Container>
     </Box>

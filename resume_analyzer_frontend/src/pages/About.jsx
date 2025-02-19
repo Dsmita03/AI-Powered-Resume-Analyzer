@@ -1,9 +1,16 @@
-import { Box, Container, Typography, Grid, Paper, Avatar} from "@mui/material";
-import { Sparkles } from 'lucide-react';
+import { Box, Container, Typography, Grid, Paper, Avatar, Button } from "@mui/material";
+import { Sparkles, CheckCircle, HelpCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const About = () => {
+
+  const navigate = useNavigate(); // Initialize the navigate function
+
+  const handleGetStartedClick = () => {
+    navigate('/'); // Navigate to the home page when the button is clicked
+  };
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", width: "100vw", overflow: "hidden", backgroundColor: "#E3F2FD" }}>
       
@@ -25,32 +32,69 @@ const About = () => {
       >
         <Container>
           <Typography variant="h2" fontWeight="bold" gutterBottom>
-            About AI Resume Analyzer
+            About ResuMate.ai
           </Typography>
           <Typography variant="h6" sx={{ mt: 2, maxWidth: 700, mx: "auto", opacity: 0.9 }}>
-            Our AI-driven platform helps job seekers craft perfect resumes with smart insights, personalized feedback, and job match analysis.
+            Empowering job seekers with AI-driven resume analysis, personalized insights, and job match suggestions to boost your career opportunities.
           </Typography>
+          <Button variant="contained" color="primary" sx={{ mt: 3 }} onClick={handleGetStartedClick}>
+            Get Started
+          </Button>
         </Container>
       </Box>
 
-      {/* Core Features */}
+      {/* About Section */}
       <Container sx={{ py: 8 }}>
         <Typography variant="h4" fontWeight="bold" textAlign="center" color="primary" gutterBottom>
-          Why Choose Us?
+          What is ResuMate.ai?
+        </Typography>
+        <Typography variant="body1" color="textSecondary" sx={{ mt: 2, maxWidth: 800, mx: "auto", opacity: 0.8 }}>
+          The ** ResuMate.ai ** is an innovative platform designed to help job seekers craft the perfect resume using cutting-edge artificial intelligence. Our goal is to simplify the resume-building process while offering insightful recommendations to make your resume stand out to potential employers.
+        </Typography>
+        <Typography variant="body1" color="textSecondary" sx={{ mt: 2, maxWidth: 800, mx: "auto", opacity: 0.8 }}>
+          Whether you’re applying for a job, seeking a career change, or just want to refine your resume, our AI-powered analysis helps optimize your resume for job descriptions and ensures it aligns with industry standards. 
+        </Typography>
+      </Container>
+
+      {/* Core Features Section */}
+      <Container sx={{ py: 8 }}>
+        <Typography variant="h4" fontWeight="bold" textAlign="center" color="primary" gutterBottom>
+          Key Features of ResuMate.ai
         </Typography>
         <Grid container spacing={4} sx={{ mt: 4 }}>
           {[
-            { title: "AI-Powered Insights", description: "Analyze your resume with cutting-edge AI models for deep insights.", icon: <Sparkles className="w-12 h-12 text-blue-700" /> },
-            { title: "Instant Feedback", description: "Receive real-time suggestions to improve your resume instantly.", icon: <Sparkles className="w-12 h-12 text-blue-500" /> },
-            { title: "Job Matching", description: "Check how well your resume aligns with job descriptions.", icon: <Sparkles className="w-12 h-12 text-blue-400" /> },
+            { 
+              title: "AI-Powered Insights", 
+              description: "Analyze your resume with advanced AI models that provide deep insights on how to improve content, structure, and keywords.", 
+              icon: <Sparkles className="w-12 h-12 text-blue-700" /> 
+            },
+            { 
+              title: "Instant Feedback", 
+              description: "Receive real-time suggestions for optimizing your resume’s language, formatting, and relevance to the job market.", 
+              icon: <CheckCircle className="w-12 h-12 text-green-500" /> 
+            },
+            { 
+              title: "Job Match Analysis", 
+              description: "Find out how well your resume matches specific job descriptions, helping you target the right roles.", 
+              icon: <HelpCircle className="w-12 h-12 text-blue-400" /> 
+            },
+            { 
+              title: "Personalized Recommendations", 
+              description: "Get personalized advice based on your skills, experience, and career goals to help you refine your resume.", 
+              icon: <Sparkles className="w-12 h-12 text-yellow-500" /> 
+            },
           ].map((feature, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={3} key={index}>
               <Paper 
                 elevation={6} 
                 sx={{ 
                   p: 4, textAlign: "center", borderRadius: 3, 
                   backgroundColor: "#BBDEFB",
                   transition: "0.3s", 
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between", // Ensures uniform card height
+                  height: "100%", // Ensures all cards have equal height
                   "&:hover": { transform: "scale(1.05)", boxShadow: 8 }
                 }}
               >
@@ -72,7 +116,7 @@ const About = () => {
       {/* Meet Our Team Section */}
       <Container sx={{ py: 8 }}>
         <Typography variant="h4" fontWeight="bold" textAlign="center" color="primary" gutterBottom>
-          Meet Our Team
+          Meet Our Expert Team
         </Typography>
         <Grid container spacing={4} justifyContent="center">
           {[
@@ -87,6 +131,10 @@ const About = () => {
                   p: 3, textAlign: "center", borderRadius: 3, 
                   backgroundColor: "#BBDEFB",
                   transition: "0.3s",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between", // Ensures uniform card height
+                  height: "100%", // Ensures all cards have equal height
                   "&:hover": { transform: "scale(1.05)", boxShadow: 8 }
                 }}
               >
@@ -98,6 +146,7 @@ const About = () => {
           ))}
         </Grid>
       </Container>
+
       <Footer />
     </Box>
   );

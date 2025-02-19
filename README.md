@@ -22,7 +22,7 @@ The **AI-Powered Resume Analyzer** is a web application that allows users to upl
 ### **Backend** (Flask + Python)
 - Flask (REST API)
 - Flask-CORS (Cross-Origin Resource Sharing)
-- OpenAI API (For Resume Analysis)
+- Gemini API (For Resume Analysis)
 - PDFMiner & python-docx (For Resume Parsing)
 - TensorFlow/NLP Libraries (Text Processing)
 - Firebase (Storage for User & Resume Data)
@@ -31,9 +31,7 @@ The **AI-Powered Resume Analyzer** is a web application that allows users to upl
 ```
 AI-Resume-Analyzer/
 │── backend/                # Backend Code (Flask + Python)
-│   ├── models/             # Database Models
-│   ├── routes/             # API Routes
-│   ├── controllers/        # Business Logic
+│   ├── uploads/             #for storing 
 │   ├── utils/              # Helper Functions
 │   ├── app.py              # Entry Point
 │
@@ -41,8 +39,7 @@ AI-Resume-Analyzer/
 │   ├── src/
 │   │   ├── components/     # React Components
 │   │   ├── pages/          # Pages
-│   │   ├── store/          # Redux State Management
-│   │   ├── router/         # React Router Config
+│   │   ├── router.jsx      # React Router Config
 │   │   ├── App.jsx         # Root Component
 │   │   ├── main.jsx        # Entry Point
 │
@@ -60,7 +57,7 @@ git clone https://github.com/Dsmita03/AI-Powered-Resume-Analyzer
 ```sh
 cd backend
 pip install -r requirements.txt
-python app.py  # Runs on http://localhost:5000
+python app.py  # Runs on http://127.0.0.1:5000
 ```
 
 ### 3️⃣ Frontend Setup
