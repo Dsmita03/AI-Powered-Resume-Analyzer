@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import JobMatching from "./pages/Job Matching";
 import AdminPanel from "./pages/Admin Panel";
 import SavedResumes from "./pages/Saved Resumes";
-
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const AppRouter = () => {
   return (
@@ -19,11 +19,11 @@ const AppRouter = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signUp" element={<Signup />} /> 
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/savedResume" element={<SavedResumes/>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/savedResume" element={<ProtectedRoute><SavedResumes/></ProtectedRoute>} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/job-matching" element={<JobMatching />} /> 
-        <Route path="/upload" element={<UploadResume />} />
+        <Route path="/upload" element={<ProtectedRoute><UploadResume /></ProtectedRoute>} />
         <Route path="/result" element={<AnalysisResult />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
