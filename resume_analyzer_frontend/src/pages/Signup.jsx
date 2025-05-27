@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { TextField, Button, Typography, Box, Paper, CircularProgress, MenuItem, Select, FormControl} from "@mui/material";
+import { TextField, Button, Typography, Box, Paper, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [bgImage, setBgImage] = useState("");
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ email: "", password: "", role: "user" });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const UNSPLASH_ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
@@ -28,13 +28,14 @@ const Signup = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(""); // Clear error on change
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.password || !formData.role) {
-      setError("All fields are required!");
+    if (!formData.email || !formData.password) {
+      setError("Email and password are required!");
       return;
     }
 
@@ -42,24 +43,22 @@ const Signup = () => {
     localStorage.setItem("token", "dummy-auth-token");
     localStorage.setItem("user", JSON.stringify(formData));
 
-    // Redirect based on role
-    if (formData.role === "admin") {
-      navigate("/admin-panel");
-    } else {
-      navigate("/home");
-    }
+    // Always redirect to admin panel after signup
+    navigate("/admin");
   };
 
   return (
-    <Box sx={{ 
-      width: "100vw", 
-      height: "100vh", 
-      display: "flex", 
-      justifyContent: "center", 
-      alignItems: "center", 
-      position: "relative",
-      overflow: "hidden",
-    }}>
+    <Box
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
       {/* Background Image */}
       <Box
         sx={{
@@ -96,7 +95,9 @@ const Signup = () => {
           boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.3)",
         }}
       >
-        <Typography variant="h5" fontWeight="bold" mb={2} color="white">Create Your Account</Typography>
+        <Typography variant="h5" fontWeight="bold" mb={2} color="white">
+          Create Your Account
+        </Typography>
         {error && <Typography color="error">{error}</Typography>}
 
         <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -120,31 +121,20 @@ const Signup = () => {
             InputProps={{ sx: { color: "white" } }}
             sx={{ input: { color: "white" }, label: { color: "white" }, fieldset: { borderColor: "white" } }}
           />
+          <TextField
+            label="Confirm Password"
+            type="Confirm password"
+            name="confirm password"
+            fullWidth
+            required
+            onChange={handleChange}
+            InputProps={{ sx: { color: "white" } }}
+            sx={{ input: { color: "white" }, label: { color: "white" }, fieldset: { borderColor: "white" } }}
+          />
 
-          {/* Role Selection */}
-          <FormControl fullWidth>
-         <Select
-           name="role"
-            value={formData.role}
-           onChange={handleChange}
-           displayEmpty
-          sx={{
-          color: "white",
-          ".MuiOutlinedInput-notchedOutline": { borderColor: "white" },
-          "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
-    }}
-  >
-    <MenuItem value="" disabled>
-      Role
-    </MenuItem>
-    <MenuItem value="user">User</MenuItem>
-    <MenuItem value="admin">Admin</MenuItem>
-  </Select>
-</FormControl>
-
-
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ py: 1.2 }}>Sign Up</Button>
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ py: 1.2 }}>
+            Sign Up
+          </Button>
           <Typography variant="body2" mt={1} color="white">
             Already have an account?{" "}
             <Button onClick={() => navigate("/login")} color="primary" sx={{ textTransform: "none" }}>

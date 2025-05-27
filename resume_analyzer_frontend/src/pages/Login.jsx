@@ -40,7 +40,7 @@ const Login = () => {
     }
 
     localStorage.setItem("token", "dummy-auth-token"); // Mock token
-    navigate("/dashboard"); // Redirect after login
+    navigate("/admin"); // Redirect after login
   };
 
   return (
