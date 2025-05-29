@@ -44,7 +44,7 @@ const Signup = () => {
     localStorage.setItem("user", JSON.stringify(formData));
 
     // Always redirect to admin panel after signup
-    navigate("/admin");
+    navigate("/");
   };
 
   return (

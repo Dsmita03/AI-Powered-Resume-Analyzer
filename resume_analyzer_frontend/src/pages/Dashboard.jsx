@@ -1,32 +1,120 @@
-import { useState, useEffect } from "react";
-import { Box, Grid, Paper, Typography, IconButton } from "@mui/material";
-import { Brightness4, Brightness7, UploadFile, Work, BarChart as BarChartIcon } from "@mui/icons-material";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
+import { useState, useEffect, useRef } from "react";
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import {
+  Brightness4,
+  Brightness7,
+  UploadFile,
+  Work,
+  BarChart as BarChartIcon,
+} from "@mui/icons-material";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip as RechartTooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+} from "recharts";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const dashboardData = [
+const initialDashboardData = [
   { name: "Jan", resumes: 10, matches: 5 },
   { name: "Feb", resumes: 15, matches: 8 },
   { name: "Mar", resumes: 20, matches: 12 },
   { name: "Apr", resumes: 25, matches: 18 },
 ];
 
+const statsConfig = [
+  {
+    icon: <UploadFile fontSize="large" />,
+    value: "250",
+    label: "Resumes Uploaded",
+    colorLight: "#1565c0",
+    colorDark: "#90caf9",
+  },
+  {
+    icon: <Work fontSize="large" />,
+    value: "120",
+    label: "Job Matches",
+    colorLight: "#2e7d32",
+    colorDark: "#a5d6a7",
+  },
+  {
+    icon: <BarChartIcon fontSize="large" />,
+    value: "85%",
+    label: "Resume Optimization",
+    colorLight: "#ef6c00",
+    colorDark: "#ffcc80",
+  },
+];
+
+const WEBSOCKET_URL = "wss://your-websocket-server.example/ws"; // Replace with your WS URL
+
 const Dashboard = () => {
-  // Load dark mode preference from local storage
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
   });
 
-  // Update local storage when dark mode changes
+  const [dashboardData, setDashboardData] = useState(initialDashboardData);
+
+  const ws = useRef(null);
+
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
-  // Toggle dark mode
+  useEffect(() => {
+    // Setup WebSocket connection
+    ws.current = new WebSocket(WEBSOCKET_URL);
+
+    ws.current.onopen = () => {
+      console.log("WebSocket connected");
+      // Optionally request initial data or authenticate
+      // ws.current.send(JSON.stringify({ type: "getInitialData" }));
+    };
+
+    ws.current.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === "updateData" && Array.isArray(message.data)) {
+          setDashboardData(message.data);
+        }
+      } catch (err) {
+        console.error("WebSocket message error:", err);
+      }
+    };
+
+    ws.current.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    ws.current.onclose = () => {
+      console.log("WebSocket disconnected");
+      // Optionally implement reconnect logic here
+    };
+
+    return () => {
+      ws.current.close();
+    };
+  }, []);
+
   const toggleDarkMode = () => {
     setDarkMode((prevMode) => !prevMode);
   };
+
+  // Theme colors
+  const bgSecondary = darkMode ? "#1e1e1e" : "#fff";
+  const chartBg = darkMode ? "#2c2c2c" : "#f9f9f9";
+  const textSecondary = darkMode ? "#ccc" : "#555";
 
   return (
     <Box
@@ -39,84 +127,110 @@ const Dashboard = () => {
         transition: "background-color 0.3s ease-in-out",
       }}
     >
-      {/* Header */}
       <Header />
 
-      {/* Main Content */}
       <Box sx={{ flex: 1, p: 4 }}>
-        
-        {/* Title & Theme Toggle */}
+        {/* Header Row */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
           <Typography variant="h4" fontWeight="bold" color="primary">
             Dashboard
           </Typography>
 
-          {/* Dark Mode Toggle Button */}
           <IconButton
             onClick={toggleDarkMode}
             sx={{
-              backgroundColor: darkMode ? "#1976d2" : "#1976d2",
+              backgroundColor: "#1976d2",
               color: "#fff",
-              "&:hover": { backgroundColor: darkMode ? "#1565c0" : "#0d47a1" },
-              transition: "background-color 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: darkMode ? "#1565c0" : "#0d47a1",
+              },
             }}
           >
             {darkMode ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
         </Box>
 
-        {/* Overview Stats */}
-        <Grid container spacing={3} mb={3}>
-          {[
-            { icon: <UploadFile fontSize="large" color="primary" />, value: "250", label: "Total Resumes Uploaded" },
-            { icon: <Work fontSize="large" color="secondary" />, value: "120", label: "Successful Job Matches" },
-            { icon: <BarChartIcon fontSize="large" color="success" />, value: "85%", label: "Resume Optimization Rate" }
-          ].map((stat, index) => (
-            <Grid item xs={12} sm={4} key={index}>
+        {/* Stats Cards */}
+        <Grid container spacing={4} mb={6}>
+          {statsConfig.map(({ icon, value, label, colorLight, colorDark }, i) => (
+            <Grid key={i} item xs={12} sm={6} md={4}>
               <Paper
+                elevation={darkMode ? 2 : 6}
                 sx={{
-                  p: 3,
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  backgroundColor: darkMode ? "#1e1e1e" : "#fff",
-                  color: darkMode ? "#fff" : "#333",
-                  boxShadow: darkMode ? "none" : "0 2px 10px rgba(0,0,0,0.1)",
-                  transition: "all 0.3s ease-in-out",
+                  gap: 3,
+                  padding: 3,
+                  borderRadius: 3,
+                  background: darkMode
+                    ? `linear-gradient(145deg, ${colorDark}33, ${colorDark}11)`
+                    : `linear-gradient(145deg, ${colorLight}11, ${colorLight}22)`,
+                  boxShadow: darkMode
+                    ? "inset 2px 2px 5px #00000080, inset -2px -2px 5px #33333390"
+                    : `0 8px 15px rgba(25, 118, 210, 0.2)`,
+                  transition: "transform 0.25s ease",
+                  "&:hover": {
+                    transform: "translateY(-6px)",
+                  },
                 }}
               >
-                {stat.icon}
+                <Box
+                  sx={{
+                    color: darkMode ? colorDark : colorLight,
+                    fontSize: 48,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {icon}
+                </Box>
+
                 <Box>
-                  <Typography variant="h6" fontWeight="bold">{stat.value}</Typography>
-                  <Typography variant="body2" color="textSecondary">{stat.label}</Typography>
+                  <Typography variant="h4" fontWeight={700}>
+                    {value}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: textSecondary }}>
+                    {label}
+                  </Typography>
                 </Box>
               </Paper>
             </Grid>
           ))}
         </Grid>
 
-        {/* Charts Section */}
-        <Grid container spacing={3}>
+        {/* Charts */}
+        <Grid container spacing={5}>
           {/* Bar Chart */}
           <Grid item xs={12} md={6}>
             <Paper
               sx={{
-                p: 4,
-                height: "350px",
-                backgroundColor: darkMode ? "#1e1e1e" : "#fff",
-                color: darkMode ? "#fff" : "#333",
-                boxShadow: darkMode ? "none" : "0 2px 10px rgba(0,0,0,0.1)",
-                transition: "all 0.3s ease-in-out",
+                padding: 4,
+                borderRadius: 4,
+                backgroundColor: bgSecondary,
+                height: 360,
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <Typography variant="h6" gutterBottom>Resumes Uploaded Over Time</Typography>
-              <Box sx={{ backgroundColor: darkMode ? "#252525" : "#eef2f7", borderRadius: 2, padding: 2 }}>
-                <ResponsiveContainer width="100%" height={250}>
+              <Typography variant="h6" fontWeight={600} sx={{ mb: 2, color: "#1976d2" }}>
+                Resumes Uploaded Over Time
+              </Typography>
+              <Box sx={{ flexGrow: 1, backgroundColor: chartBg, borderRadius: 2 }}>
+                <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={dashboardData}>
-                    <XAxis dataKey="name" stroke={darkMode ? "#bbb" : "#333"} />
-                    <YAxis stroke={darkMode ? "#bbb" : "#333"} />
-                    <Tooltip contentStyle={{ backgroundColor: darkMode ? "#444" : "#fff", color: "#333" }} />
-                    <Bar dataKey="resumes" fill={darkMode ? "#64b5f6" : "#1976d2"} />
+                    <XAxis dataKey="name" stroke={textSecondary} />
+                    <YAxis stroke={textSecondary} allowDecimals={false} />
+                    <RechartTooltip
+                      contentStyle={{
+                        backgroundColor: bgSecondary,
+                        borderRadius: 8,
+                        boxShadow: darkMode
+                          ? "0 0 12px rgba(0,0,0,0.8)"
+                          : "0 0 12px rgba(25, 118, 210, 0.15)",
+                      }}
+                    />
+                    <Bar dataKey="resumes" fill="#1976d2" barSize={30} radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="matches" fill="#ef6c00" barSize={30} radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </Box>
@@ -127,22 +241,32 @@ const Dashboard = () => {
           <Grid item xs={12} md={6}>
             <Paper
               sx={{
-                p: 4,
-                height: "350px",
-                backgroundColor: darkMode ? "#1e1e1e" : "#fff",
-                color: darkMode ? "#fff" : "#333",
-                boxShadow: darkMode ? "none" : "0 2px 10px rgba(0,0,0,0.1)",
-                transition: "all 0.3s ease-in-out",
+                padding: 4,
+                borderRadius: 4,
+                backgroundColor: bgSecondary,
+                height: 360,
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <Typography variant="h6" gutterBottom>Job Matches Trend</Typography>
-              <Box sx={{ backgroundColor: darkMode ? "#252525" : "#eef2f7", borderRadius: 2, padding: 2 }}>
-                <ResponsiveContainer width="100%" height={250}>
+              <Typography variant="h6" fontWeight={600} sx={{ mb: 2, color: "#1976d2" }}>
+                Resume Matches Over Time
+              </Typography>
+              <Box sx={{ flexGrow: 1, backgroundColor: chartBg, borderRadius: 2 }}>
+                <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={dashboardData}>
-                    <XAxis dataKey="name" stroke={darkMode ? "#bbb" : "#333"} />
-                    <YAxis stroke={darkMode ? "#bbb" : "#333"} />
-                    <Tooltip contentStyle={{ backgroundColor: darkMode ? "#444" : "#fff", color: "#333" }} />
-                    <Line type="monotone" dataKey="matches" stroke={darkMode ? "#ffb74d" : "#ff5722"} strokeWidth={2} />
+                    <XAxis dataKey="name" stroke={textSecondary} />
+                    <YAxis stroke={textSecondary} allowDecimals={false} />
+                    <RechartTooltip
+                      contentStyle={{
+                        backgroundColor: bgSecondary,
+                        borderRadius: 8,
+                        boxShadow: darkMode
+                          ? "0 0 12px rgba(0,0,0,0.8)"
+                          : "0 0 12px rgba(25, 118, 210, 0.15)",
+                      }}
+                    />
+                    <Line type="monotone" dataKey="matches" stroke="#ef6c00" strokeWidth={3} />
                   </LineChart>
                 </ResponsiveContainer>
               </Box>
@@ -151,7 +275,6 @@ const Dashboard = () => {
         </Grid>
       </Box>
 
-      {/* Footer */}
       <Footer />
     </Box>
   );
