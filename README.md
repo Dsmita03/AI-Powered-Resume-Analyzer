@@ -56,26 +56,26 @@ git clone https://github.com/Dsmita03/AI-Powered-Resume-Analyzer
 
 ### 2️⃣ Backend Setup
 ```sh
-cd backend
+cd resume_analyzer_backend
 pip install -r requirements.txt
 python app.py  # Runs on http://127.0.0.1:5000
 ```
 
 ### 3️⃣ Frontend Setup
 ```sh
-cd frontend
+cd resume_analyzer_frontend
 npm install
 npm run dev  # Runs on http://localhost:5173
 ```
 
 ## 🖥️ Pages Overview
 - **Home Page**: Upload resumes, view past analyses.
-- **Analysis Page**: Displays extracted details, job-fit score, and suggestions.
+- **Analysis Page**:Displays detailed extracted information from the uploaded resume such as contact info, skills, education, and work experience. Also shows the AI-generated job-fit score and actionable suggestions to improve the resume.
 - **Login/Register**: User authentication.
 - **Dashboard**: Manage saved resumes and job matches.
 - **Job Matching Page**: View job recommendations based on AI-powered analysis.
 - **Saved Resumes Page**: Access previously analyzed resumes and insights.
-- **Admin Panel**: Manage users, system settings, and analysis data.
+ 
 
  
 ## 🤝 Contributing
